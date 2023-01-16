@@ -1,0 +1,4 @@
+opencv-python~=4.5.5.64
+numpy~=1.22.3
+deepface~=0.0.75
+mediapipe~=0.8.9.1
