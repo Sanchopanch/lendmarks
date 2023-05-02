@@ -4,8 +4,8 @@ import pickle
 
 def saveVideo():
     cap = cv.VideoCapture(0)
-    cap.set(cv.CAP_PROP_FRAME_WIDTH, 800)
-    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 600)
+    cap.set(cv.CAP_PROP_FRAME_WIDTH, 1200)
+    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 800)
 
     frames = []
     while True:
@@ -23,6 +23,7 @@ def saveVideo():
             frames.append(rez)
         elif key == 27: # ESC
             cv.imwrite('saved_video.png', rez[1])
+            cv.imwrite('saved_video1.png', rez[1])
             file = open('rez.pkl', 'wb')
             pickle.dump(frames, file)
             file.close()

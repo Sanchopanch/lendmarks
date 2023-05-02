@@ -1,7 +1,6 @@
 #emotion_detection.py
 import cv2
 from deepface import DeepFace
-import numpy as np  #this will be used later in the process
 
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
