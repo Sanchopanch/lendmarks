@@ -17,14 +17,14 @@ def add_mask():
             blue = pixIm[0]>pixIm[1]+50
             red = pixIm[2]>pixIm[1]+50
             if red:
-                # print('red point at '+str(x)+ ' '+ str(y))
+                print('red point at '+str(x)+ ' '+ str(y))
                 final[y][x] = rez[0][y][x]
             if blue:
-                # print('blue point at ' + str(x) + ' ' + str(y))
+                print('blue point at ' + str(x) + ' ' + str(y))
                 final[y][x] = rez[2][y][x]
     cv.imshow('aaaa', final)
     cv.waitKey(0)
-    cv.imwrite('saved_video_m.png', rez[1])
+    cv.imwrite('saved_video_m.png', final)
 
 
 if __name__=="__main__":
