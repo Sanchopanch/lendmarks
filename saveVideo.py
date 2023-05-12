@@ -27,6 +27,7 @@ def saveVideo():
             file = open('rez.pkl', 'wb')
             pickle.dump(frames, file)
             file.close()
+            print(f'saved {len(frames)} frames')
             return
 
 
