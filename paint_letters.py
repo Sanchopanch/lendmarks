@@ -84,14 +84,19 @@ def put_letters():
 
     html = 'export let mooveData = ['
     html2 = 'export let mooveData = ['
-    for frame in frames:
+    for i,frame in enumerate(frames):
+        min_rating, rating_pix = 99999999., frame.copy()
         for shift_x in range(x_size):
             for shift_y in range(y_size):
 
             # frame = frames[0]
                 wLetters = frame.copy()
-                wLetters.roll(shift_x)
-                wLetters.roll(shift_y, axis=0)
+                wLetters = np.roll(wLetters, shift_x)
+                wLetters = np.roll(wLetters, shift_y, axis=0)
+                mask_rating_curr = mask_rating.copy()
+                mask_rating_curr = np.roll(mask_rating_curr, shift_x)
+                mask_rating_curr = np.roll(mask_rating_curr, shift_y, axis=0)
+                cv.imwrite(f'debug/sor{shift_x}-{shift_y}.png', wLetters)
 
                 if not first_el:
                     html += ','
@@ -108,8 +113,8 @@ def put_letters():
                         # print(x, y)
                         y_coor = y * y_size
                         x_coor = x * x_size
-                        fragment = frame[y_coor:y_coor + y_size, x_coor:x_coor + x_size]
-                        fragment_mask = mask_rating[y_coor:y_coor + y_size, x_coor:x_coor + x_size]
+                        fragment = wLetters[y_coor:y_coor + y_size, x_coor:x_coor + x_size]
+                        fragment_mask = mask_rating_curr[y_coor:y_coor + y_size, x_coor:x_coor + x_size]
                         if fragment.sum() == space:
                             print(' ', end = "")
                             string_html2 +=' '
@@ -118,18 +123,29 @@ def put_letters():
                         rating_sum += rating
                         wLetters[y_coor:y_coor + y_size, x_coor:x_coor + x_size] = closest_letter_pix
                         print(current_closest_letter, end="")
-                        string_html2 += current_closest_letter
-                        if not first_el2:
-                            html +=','
-                        html +=f'"x{x_coor}-y{y_coor}":"{current_closest_letter}"'
-                        first_el2 = False
-                    html2 +=f'"y{y_coor}":"{string_html2}'
-                    print('|')
-                    cv.imshow('current frame', wLetters.copy())
-                    html += '}'
 
-    html +='];'
-    cv.imwrite('saved_video_final.png', wLetters)
+                        string_html2 += current_closest_letter
+                        # if not first_el2:
+                        #     html +=','
+                        # html +=f'"x{x_coor}-y{y_coor}":"{current_closest_letter}"'
+                        first_el2 = False
+                    print('|')
+
+                if rating<min_rating:
+                    print(f'found best frame {rating}')
+                    min_rating = rating
+                    rating_pix = wLetters.copy()
+                else:
+                    print(f'corrent frame is not best {rating}')
+                # html2 +=f'"y{y_coor}":"{string_html2}'
+                cv.imwrite(f'debug/rez{shift_x}-{shift_y}.png', wLetters)
+
+                    # cv.imshow('current frame', rating_pix.copy())
+                # html += '}'
+                if i == 0:
+                    cv.imwrite('saved_video_final_first.png', wLetters)
+    # html +='];'
+    cv.imwrite('saved_video_final.png', rating_pix)
     cv.waitKey(0)
 
     html_file = open("output.html", "wt")
