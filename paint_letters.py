@@ -7,14 +7,15 @@ def get_best_letter(letters,  fragment, fragment_mask):
     min_dist = 9999999999.
     current_closest_letter = ' '
     closest_letter_pix = None
+    rating_min_dist = 999999999999.
     y_size, x_size, _ = fragment.shape
-    rating = 0
     for key in letters:
         if key == ' ':
             continue
         letterPix = letters[key]
         dist = 0.
         aa = 0
+        rating = 0
         for y in range(y_size):
             for x in range(x_size):
                 currPix = fragment[y,x]
@@ -37,11 +38,12 @@ def get_best_letter(letters,  fragment, fragment_mask):
 
         dist = dist/aa
         if min_dist > dist:
+            rating_min_dist = rating
             min_dist = dist
             current_closest_letter = key
             closest_letter_pix = letterPix.copy()
             # print(current_closest_letter+' dist='+str(min_dist))
-    return current_closest_letter, closest_letter_pix, rating
+    return current_closest_letter, closest_letter_pix, rating_min_dist
 
 def find_letter():
     x_size, y_size = 9, 17
@@ -81,9 +83,8 @@ def put_letters():
     cv.waitKey(0)
 
     first_el = True
-
     html = 'export let mooveData = ['
-    html2 = 'export let mooveData = ['
+    # html2 = 'export let mooveData = ['
     for i,frame in enumerate(frames):
         min_rating, rating_pix = 99999999., frame.copy()
         for shift_x in range(x_size):
@@ -98,13 +99,10 @@ def put_letters():
                 mask_rating_curr = np.roll(mask_rating_curr, shift_y, axis=0)
                 cv.imwrite(f'debug/sor{shift_x}-{shift_y}.png', wLetters)
 
-                if not first_el:
-                    html += ','
-                    html2 += ','
-                first_el = False
+                html = 'export let mooveData = ['
                 html += '\n{'
-                html2 += '\n{'
-                first_el2 = True
+                # html2 += '\n{'
+                # first_el2 = True
 
                 rating_sum = 0
                 for y in range(rows):
@@ -125,10 +123,9 @@ def put_letters():
                         print(current_closest_letter, end="")
 
                         string_html2 += current_closest_letter
-                        # if not first_el2:
-                        #     html +=','
-                        # html +=f'"x{x_coor}-y{y_coor}":"{current_closest_letter}"'
-                        first_el2 = False
+                        if not first_el:
+                            html += ','
+                        html += f'"x{x_coor}-y{y_coor}":"{current_closest_letter}"'
                     print('|')
 
                 if rating<min_rating:
@@ -141,10 +138,10 @@ def put_letters():
                 cv.imwrite(f'debug/rez{shift_x}-{shift_y}.png', wLetters)
 
                     # cv.imshow('current frame', rating_pix.copy())
-                # html += '}'
+                html += '}'
                 if i == 0:
                     cv.imwrite('saved_video_final_first.png', wLetters)
-    # html +='];'
+    html +='\n];'
     cv.imwrite('saved_video_final.png', rating_pix)
     cv.waitKey(0)
 
