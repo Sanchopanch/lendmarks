@@ -81,9 +81,8 @@ def put_letters():
     cv.waitKey(0)
 
     first_el = True
-
     html = 'export let mooveData = ['
-    html2 = 'export let mooveData = ['
+    # html2 = 'export let mooveData = ['
     for i,frame in enumerate(frames):
         min_rating, rating_pix = 99999999., frame.copy()
         for shift_x in range(x_size):
@@ -98,13 +97,10 @@ def put_letters():
                 mask_rating_curr = np.roll(mask_rating_curr, shift_y, axis=0)
                 cv.imwrite(f'debug/sor{shift_x}-{shift_y}.png', wLetters)
 
-                if not first_el:
-                    html += ','
-                    html2 += ','
-                first_el = False
+                html = 'export let mooveData = ['
                 html += '\n{'
-                html2 += '\n{'
-                first_el2 = True
+                # html2 += '\n{'
+                # first_el2 = True
 
                 rating_sum = 0
                 for y in range(rows):
@@ -127,7 +123,7 @@ def put_letters():
                         string_html2 += current_closest_letter
                         # if not first_el2:
                         #     html +=','
-                        # html +=f'"x{x_coor}-y{y_coor}":"{current_closest_letter}"'
+                        html +=f'"x{x_coor}-y{y_coor}":"{current_closest_letter}"'
                         first_el2 = False
                     print('|')
 
@@ -141,10 +137,10 @@ def put_letters():
                 cv.imwrite(f'debug/rez{shift_x}-{shift_y}.png', wLetters)
 
                     # cv.imshow('current frame', rating_pix.copy())
-                # html += '}'
+                html += '}'
                 if i == 0:
                     cv.imwrite('saved_video_final_first.png', wLetters)
-    # html +='];'
+    html +='\n];'
     cv.imwrite('saved_video_final.png', rating_pix)
     cv.waitKey(0)
 
