@@ -128,7 +128,7 @@ def put_letters():
                         html += f'"x{x_coor}-y{y_coor}":"{current_closest_letter}"'
                     print('|')
 
-                if rating<min_rating:
+                if rating < min_rating:
                     print(f'found best frame {rating}')
                     min_rating = rating
                     rating_pix = wLetters.copy()
