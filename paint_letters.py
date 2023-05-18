@@ -1,6 +1,7 @@
 import pickle
 import numpy as np
 import cv2 as cv
+import json
 
 def get_best_letter(letters,  fragment, fragment_mask):
 
@@ -79,30 +80,20 @@ def put_letters():
     yPix, xPix, _ = image.shape
     colmns = int(xPix / x_size)
     rows = int(yPix / y_size)
-    cv.imshow('initial', image)
-    cv.waitKey(0)
 
-    first_el = True
-    html = 'export let mooveData = ['
-    # html2 = 'export let mooveData = ['
     for i,frame in enumerate(frames):
         min_rating, rating_pix = 99999999., frame.copy()
-        for shift_x in range(x_size):
-            for shift_y in range(y_size):
-
-            # frame = frames[0]
+        for shift_x in range(1): # x_size
+            for shift_y in range(1): # y_size
                 wLetters = frame.copy()
                 wLetters = np.roll(wLetters, shift_x)
                 wLetters = np.roll(wLetters, shift_y, axis=0)
                 mask_rating_curr = mask_rating.copy()
                 mask_rating_curr = np.roll(mask_rating_curr, shift_x)
                 mask_rating_curr = np.roll(mask_rating_curr, shift_y, axis=0)
-                cv.imwrite(f'debug/sor{shift_x}-{shift_y}.png', wLetters)
+                # cv.imwrite(f'debug/sor{shift_x}-{shift_y}.png', wLetters)
 
-                html = 'export let mooveData = ['
-                html += '\n{'
-                # html2 += '\n{'
-                # first_el2 = True
+                rez_dict, rez_dict2 = {}, {}
 
                 rating_sum = 0
                 for y in range(rows):
@@ -123,9 +114,10 @@ def put_letters():
                         print(current_closest_letter, end="")
 
                         string_html2 += current_closest_letter
-                        if not first_el:
-                            html += ','
-                        html += f'"x{x_coor}-y{y_coor}":"{current_closest_letter}"'
+                        # html += f'"x{x_coor}-y{y_coor}":"{current_closest_letter}"'
+                        rez_dict[f'x{x_coor}-y{y_coor}'] = current_closest_letter
+                    rez_dict2[f'x0-y{y_coor}'] = string_html2
+                    # html2 +=f'"y{y_coor}":"{string_html2}"'
                     print('|')
 
                 if rating < min_rating:
@@ -134,21 +126,19 @@ def put_letters():
                     rating_pix = wLetters.copy()
                 else:
                     print(f'corrent frame is not best {rating}')
-                # html2 +=f'"y{y_coor}":"{string_html2}'
-                cv.imwrite(f'debug/rez{shift_x}-{shift_y}.png', wLetters)
-
                     # cv.imshow('current frame', rating_pix.copy())
-                html += '}'
                 if i == 0:
                     cv.imwrite('saved_video_final_first.png', wLetters)
-    html +='\n];'
     cv.imwrite('saved_video_final.png', rating_pix)
-    cv.waitKey(0)
+    # cv.waitKey(0)
 
-    html_file = open("output.html", "wt")
-    html_file.write(html)
-    html_file.close()
-    print('saved output.html')
+    json_file = open("output.ts", "wt")
+    json_file.write("export let mooveData = [")
+    json.dump(rez_dict2, json_file)
+    json_file.write("];")
+
+    json_file.close()
+    print('saved output.ts')
 
 
 
