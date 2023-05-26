@@ -60,3 +60,6 @@
                                              `_`                     ``                                                                             `^<,`
                                            `-``                         `-`           `                                                                ``--,
                                          `+`                              `.`         y                                                                    ``>_
+
+Hello. Made this ANCII selfie whith Open-cv, python 3.8
+It is backgroud of my <a href='https://kochetkov.spb.ru/'>homepage</a>
