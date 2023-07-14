@@ -32,11 +32,10 @@ def get_best_letter(letters,  fragment, fragment_mask):
                 if currMaskRed>0:
                     rating += dist
 
-                if sumL == 0:
+                if sumL == 0 and supP == 0:
                     continue
                 aa +=1
                 dist += current_distance
-
         dist = dist/aa
         if min_dist > dist:
             rating_min_dist = rating
@@ -83,8 +82,8 @@ def put_letters():
 
     for i,frame in enumerate(frames):
         min_rating, rating_pix = 99999999., frame.copy()
-        for shift_x in range(1): # x_size
-            for shift_y in range(1): # y_size
+        for shift_x in range(x_size): # x_size
+            for shift_y in range(y_size): # y_size
                 wLetters = frame.copy()
                 wLetters = np.roll(wLetters, shift_x)
                 wLetters = np.roll(wLetters, shift_y, axis=0)

@@ -36,7 +36,7 @@ def get_letter_pix(letter, font_size):
     return image
 
 def show_alph(font_size):
-    letters = list('Qp|')
+    letters = list('CqT')
     for letter in letters:
         print(letter)
         im = get_letter_pix(letter, font_size)
@@ -57,6 +57,6 @@ def save_alph(font_size):
     file.close()
 
 if __name__ == "__main__":
-    save_alph(9)
+    # save_alph(9)
     # add_text(9)
-    # show_alph(9)
+    show_alph(9)
